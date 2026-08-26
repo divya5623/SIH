@@ -1,352 +1,206 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  CheckCircle, 
-  Sparkles, 
-  MapPin, 
-  Building, 
-  AlertCircle, 
-  Edit2, 
-  ShieldAlert,
-  HelpCircle,
-  X,
-  Cpu,
-  Layers
-} from 'lucide-react';
-import AudioWaveform from '../components/AudioWaveform';
-import StatusBadge from '../components/StatusBadge';
+import { useNavigate } from 'react-router-dom';
+import { Mic, Image as ImageIcon, X } from 'lucide-react';
 import { useComplaints } from '../context/ComplaintContext';
 
 export default function AIPreview() {
   const navigate = useNavigate();
   const { currentDraft, setCurrentDraft, addComplaint, showToast } = useComplaints();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
-  const [showConfidenceExplainer, setShowConfidenceExplainer] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Form states for editing
-  const [editIssue, setEditIssue] = useState(currentDraft.issue || "Water Leakage");
-  const [editCategory, setEditCategory] = useState(currentDraft.category || "Water Supply");
-  const [editLocation, setEditLocation] = useState(currentDraft.location || "Near Government School, Ward 5");
-  const [editAuthority, setEditAuthority] = useState(currentDraft.authority || "Gram Panchayat (Water Department)");
-  const [editPriority, setEditPriority] = useState(currentDraft.priority || "High");
+  // Editable fields
+  const [issueVal, setIssueVal] = useState(currentDraft.issue || "paani ki samasya hai teen din se");
+  const [categoryVal, setCategoryVal] = useState(currentDraft.category || "Water Supply");
+  const [wardVal, setWardVal] = useState(currentDraft.ward || "Ward 5");
+  const [gpsVal, setGpsVal] = useState(currentDraft.gps || "12.8797° N, 74.8509° E");
+  const [deptVal, setDeptVal] = useState(currentDraft.authority || "Jal Vibhag / Water Department");
+  const [priorityVal, setPriorityVal] = useState(currentDraft.priority || "High Priority");
+  const [confidenceVal, setConfidenceVal] = useState(currentDraft.confidence || 73);
 
   const handleSaveEdit = (e) => {
     e.preventDefault();
     setCurrentDraft({
       ...currentDraft,
-      issue: editIssue,
-      category: editCategory,
-      location: editLocation,
-      authority: editAuthority,
-      priority: editPriority
+      issue: issueVal,
+      category: categoryVal,
+      ward: wardVal,
+      gps: gpsVal,
+      authority: deptVal,
+      priority: priorityVal,
+      confidence: confidenceVal
     });
     setIsEditing(false);
-    showToast("✏️ Details Updated", "AI classification details updated manually");
+    showToast("✏️ Details Updated", "Grievance details updated.");
   };
 
   const handleConfirmSubmit = () => {
     setIsSubmitting(true);
     setTimeout(() => {
       const newGrievance = addComplaint({
-        issue: currentDraft.issue || editIssue,
-        category: currentDraft.category || editCategory,
-        location: currentDraft.location || editLocation,
-        gps: currentDraft.gps || "12.8797° N, 74.8509° E",
-        authority: currentDraft.authority || editAuthority,
-        priority: currentDraft.priority || editPriority,
-        confidence: currentDraft.confidence || 94,
-        description: currentDraft.description || currentDraft.audioTranscript || "Water leakage near government school.",
+        issue: issueVal,
+        category: categoryVal,
+        ward: wardVal,
+        location: `${wardVal}, Kalyanpur Gram Panchayat`,
+        gps: gpsVal,
+        authority: deptVal,
+        priority: priorityVal.includes('High') ? 'High' : (priorityVal.includes('Medium') ? 'Medium' : 'Low'),
+        confidence: confidenceVal,
+        description: currentDraft.description || issueVal,
         audioDuration: currentDraft.audioDuration || "00:06",
         inputType: currentDraft.inputType || "voice",
         image: currentDraft.image || "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&w=600&q=80"
       });
 
       navigate('/complaint/submitted', { state: { grievanceId: newGrievance.id } });
-    }, 700);
+    }, 400);
   };
 
   return (
-    <div style={{ backgroundColor: '#F7FAF8', minHeight: 'calc(100vh - 80px)', paddingBottom: '4rem' }}>
-      <div className="page-wrapper-sm">
-        {/* Top Back Navigation */}
-        <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Link
-            to="/report"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-              color: '#5A6D7C',
-              fontSize: '0.9rem',
-              fontWeight: 600
-            }}
-          >
-            <ArrowLeft size={16} />
-            Back to Input Options
-          </Link>
-
-          <button
-            type="button"
-            onClick={() => setShowConfidenceExplainer(!showConfidenceExplainer)}
-            className="btn btn-outline btn-sm"
-            style={{ fontSize: '0.78rem', padding: '0.35rem 0.75rem', borderColor: '#DDE7E2' }}
-          >
-            <Cpu size={14} color="#087A55" />
-            View AI Reasoning
-          </button>
-        </div>
-
-        {/* Heading */}
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            backgroundColor: '#E2F5EC',
-            color: '#087A55',
-            padding: '0.3rem 0.8rem',
-            borderRadius: '9999px',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-            marginBottom: '0.5rem'
-          }}>
-            <Sparkles size={14} />
-            AI Parsing Complete • High Precision
-          </div>
-          <h1 style={{
-            fontSize: '2rem',
-            fontWeight: 800,
-            color: '#102333',
-            marginBottom: '0.35rem'
-          }}>
-            AI Understanding Preview
-          </h1>
-          <p style={{ fontSize: '0.95rem', color: '#5A6D7C', fontWeight: 500 }}>
-            Review AI extracted details before submitting
-          </p>
-        </div>
-
-        {/* AI REASONING / EXPLAINABILITY DRAWER */}
-        {showConfidenceExplainer && (
-          <div style={{
-            backgroundColor: '#F0F9F5',
-            border: '1px solid #BDE3D2',
-            borderRadius: '14px',
-            padding: '1.25rem 1.5rem',
-            marginBottom: '1.75rem',
-            animation: 'pulseWave 0.3s ease-out'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-              <div style={{ fontSize: '0.9rem', fontWeight: 800, color: '#07563F', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <Layers size={16} />
-                Multi-Modal AI Classification Pipeline
-              </div>
-              <button
-                type="button"
-                onClick={() => setShowConfidenceExplainer(false)}
-                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#5A6D7C' }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <div style={{ fontSize: '0.82rem', color: '#325244', lineHeight: 1.5 }}>
-              • <strong>Acoustic & NLP Model:</strong> Detected primary intent as <em>{currentDraft.issue}</em> (96% semantic match).<br />
-              • <strong>Spatial Landmarking:</strong> Mapped landmark <em>"Government School"</em> to <strong>Ward 5</strong> database polygon.<br />
-              • <strong>Priority Engine:</strong> Categorized as <strong>High</strong> due to potential drinking water contamination and school disruption risk.
-            </div>
-          </div>
-        )}
-
-        {/* TWO TOP CARDS */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: '1.25rem',
-          marginBottom: '1.75rem'
+    <div style={{ backgroundColor: '#F7FAF8', minHeight: 'calc(100vh - 80px)', padding: '2.5rem 1.5rem 4rem 1.5rem' }}>
+      <div style={{ maxWidth: '820px', margin: '0 auto' }}>
+        {/* Title */}
+        <h1 style={{
+          fontSize: '1.65rem',
+          fontWeight: 800,
+          color: '#102333',
+          marginBottom: '1.75rem',
+          letterSpacing: '-0.2px'
         }}>
-          {/* Card Left: Input Provided */}
-          <div style={{
-            backgroundColor: '#FFFFFF',
-            border: '1px solid #DDE7E2',
-            borderRadius: '14px',
-            padding: '1.25rem',
-            boxShadow: '0 2px 6px rgba(16, 35, 51, 0.03)'
-          }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#8A9CA8', textTransform: 'uppercase', marginBottom: '0.6rem' }}>
-              Input Provided
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.85rem' }}>
-              <span style={{ fontSize: '1rem', fontWeight: 800, color: '#087A55', textTransform: 'capitalize' }}>
-                {currentDraft.inputType || 'Voice'}
-              </span>
-              <span style={{ fontSize: '0.8rem', color: '#5A6D7C', backgroundColor: '#F0F5F2', padding: '2px 8px', borderRadius: '4px' }}>
-                {currentDraft.inputType === 'voice' ? 'Spoken Voice Note' : (currentDraft.inputType === 'camera' ? 'Camera Photo' : 'Text Input')}
-              </span>
-            </div>
-            <AudioWaveform duration={currentDraft.audioDuration || "00:06"} />
-            {currentDraft.audioTranscript && (
-              <div style={{
-                marginTop: '0.75rem',
-                fontSize: '0.8rem',
-                color: '#102333',
-                backgroundColor: '#F9FCFA',
-                padding: '0.5rem 0.75rem',
-                borderRadius: '6px',
-                borderLeft: '3px solid #087A55',
-                fontStyle: 'italic'
-              }}>
-                "{currentDraft.audioTranscript}"
-              </div>
-            )}
-          </div>
+          AI Understanding Preview
+        </h1>
 
-          {/* Card Right: Image (Optional) */}
-          <div style={{
-            backgroundColor: '#FFFFFF',
-            border: '1px solid #DDE7E2',
-            borderRadius: '14px',
-            padding: '1.25rem',
-            boxShadow: '0 2px 6px rgba(16, 35, 51, 0.03)'
-          }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: 700, color: '#8A9CA8', textTransform: 'uppercase', marginBottom: '0.6rem' }}>
-              Image Evidence
-            </div>
-            <div style={{
-              width: '100%',
-              height: '110px',
-              borderRadius: '10px',
-              overflow: 'hidden',
-              position: 'relative',
-              border: '1px solid #E2EBF0'
-            }}>
-              <img
-                src={currentDraft.image || "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&w=600&q=80"}
-                alt="Complaint evidence"
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              />
-              <div style={{
-                position: 'absolute',
-                top: '8px',
-                right: '8px',
-                backgroundColor: 'rgba(8, 122, 85, 0.9)',
-                color: '#FFFFFF',
-                fontSize: '0.72rem',
-                padding: '2px 8px',
-                borderRadius: '4px',
-                fontWeight: 600
-              }}>
-                Evidence Attached
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* AI EXTRACTED INFORMATION STRUCTURED CARD */}
+        {/* TOP CARD: Audio & Evidence */}
         <div style={{
           backgroundColor: '#FFFFFF',
-          border: '1px solid #DDE7E2',
-          borderRadius: '16px',
-          padding: '1.75rem',
-          boxShadow: '0 4px 14px rgba(16, 35, 51, 0.04)',
-          marginBottom: '2rem'
+          border: '1px solid #E2EBE6',
+          borderRadius: '12px',
+          padding: '1.25rem 1.5rem',
+          marginBottom: '1.25rem',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1rem'
         }}>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            borderBottom: '1px solid #EEF3F0',
-            paddingBottom: '1rem',
-            marginBottom: '1.25rem'
-          }}>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#102333' }}>
-              AI Extracted Information
-            </h3>
-            <span style={{ fontSize: '0.78rem', color: '#087A55', fontWeight: 700, backgroundColor: '#E8F6EF', padding: '3px 10px', borderRadius: '9999px' }}>
-              Auto-Classified
+          {/* Row 1: Recorded Audio */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#5A6D7C', fontSize: '0.9rem', fontWeight: 600 }}>
+              <Mic size={18} color="#5A6D7C" />
+              <span>Recorded Audio</span>
+            </div>
+            <span style={{ fontWeight: 800, color: '#102333', fontSize: '0.92rem' }}>
+              {currentDraft.audioDuration || "00:06"}
             </span>
           </div>
 
-          {/* Structured Fields Grid / Table */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {/* Field: Issue */}
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#5A6D7C' }}>Issue</span>
-              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#102333' }}>
-                {currentDraft.issue || "Water Leakage"}
+          {/* Row 2: Evidence Image */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#5A6D7C', fontSize: '0.9rem', fontWeight: 600 }}>
+              <ImageIcon size={18} color="#5A6D7C" />
+              <span>Evidence Image</span>
+            </div>
+            <span style={{ fontWeight: 800, color: '#102333', fontSize: '0.92rem' }}>
+              1 attached
+            </span>
+          </div>
+        </div>
+
+        {/* STRUCTURED TABLE CARD */}
+        <div style={{
+          backgroundColor: '#FFFFFF',
+          border: '1px solid #E2EBE6',
+          borderRadius: '12px',
+          padding: '1.5rem 1.75rem',
+          marginBottom: '2rem',
+          boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.15rem'
+        }}>
+          {/* Row: Issue */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#5A6D7C', fontWeight: 500 }}>Issue</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#102333', textAlign: 'right' }}>
+              {issueVal}
+            </span>
+          </div>
+
+          {/* Row: Category */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#5A6D7C', fontWeight: 500 }}>Category</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#102333' }}>
+              {categoryVal}
+            </span>
+          </div>
+
+          {/* Row: Ward */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#5A6D7C', fontWeight: 500 }}>Ward</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#102333' }}>
+              {wardVal}
+            </span>
+          </div>
+
+          {/* Row: GPS */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#5A6D7C', fontWeight: 500 }}>GPS</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#102333' }}>
+              {gpsVal}
+            </span>
+          </div>
+
+          {/* Row: Assigned Department */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#5A6D7C', fontWeight: 500 }}>Assigned Department</span>
+            <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#102333' }}>
+              {deptVal}
+            </span>
+          </div>
+
+          {/* Row: Priority */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#5A6D7C', fontWeight: 500 }}>Priority</span>
+            <span style={{
+              backgroundColor: '#DE4C4C',
+              color: '#FFFFFF',
+              borderRadius: '9999px',
+              padding: '3px 12px',
+              fontWeight: 700,
+              fontSize: '0.78rem',
+              letterSpacing: '0.2px'
+            }}>
+              {priorityVal}
+            </span>
+          </div>
+
+          {/* Row: Confidence Score & Progress Bar */}
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+              <span style={{ fontSize: '0.9rem', color: '#5A6D7C', fontWeight: 500 }}>Confidence</span>
+              <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#102333' }}>
+                {confidenceVal}%
               </span>
             </div>
 
-            {/* Field: Category */}
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#5A6D7C' }}>Category</span>
-              <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#087A55' }}>
-                {currentDraft.category || "Water Supply"}
-              </span>
-            </div>
-
-            {/* Field: Location */}
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#5A6D7C' }}>Location</span>
-              <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#102333' }}>
-                {currentDraft.location || "Near Government School, Ward 5"}
-              </span>
-            </div>
-
-            {/* Field: GPS Coordinates */}
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#5A6D7C' }}>GPS Coordinates</span>
-              <span style={{ fontSize: '0.88rem', fontFamily: 'monospace', color: '#2366B1', fontWeight: 600 }}>
-                {currentDraft.gps || "12.8797° N, 74.8509° E"}
-              </span>
-            </div>
-
-            {/* Field: Supported Authority */}
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#5A6D7C' }}>Supported Authority</span>
-              <span style={{ fontSize: '0.95rem', fontWeight: 700, color: '#102333' }}>
-                {currentDraft.authority || "Gram Panchayat (Water Department)"}
-              </span>
-            </div>
-
-            {/* Field: Priority */}
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', alignItems: 'center' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#5A6D7C' }}>Priority</span>
-              <div>
-                <StatusBadge priority={currentDraft.priority || "High"} />
-              </div>
-            </div>
-
-            {/* Field: Confidence Score with Green Progress Bar */}
-            <div style={{ display: 'grid', gridTemplateColumns: '180px 1fr', alignItems: 'center', paddingTop: '0.5rem' }}>
-              <span style={{ fontSize: '0.88rem', fontWeight: 600, color: '#5A6D7C' }}>Confidence Score</span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                <div style={{
-                  flex: 1,
-                  height: '10px',
-                  backgroundColor: '#E7F2EC',
-                  borderRadius: '9999px',
-                  overflow: 'hidden',
-                  position: 'relative'
-                }}>
-                  <div style={{
-                    width: `${currentDraft.confidence || 94}%`,
-                    height: '100%',
-                    backgroundColor: '#087A55',
-                    borderRadius: '9999px',
-                    transition: 'width 0.8s ease-out'
-                  }} />
-                </div>
-                <span style={{ fontSize: '0.95rem', fontWeight: 800, color: '#087A55' }}>
-                  {currentDraft.confidence || 94}%
-                </span>
-              </div>
+            {/* Green Progress Bar */}
+            <div style={{
+              width: '100%',
+              height: '8px',
+              backgroundColor: '#EAEFEA',
+              borderRadius: '9999px',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                width: `${confidenceVal}%`,
+                height: '100%',
+                backgroundColor: '#35654B',
+                borderRadius: '9999px'
+              }} />
             </div>
           </div>
         </div>
 
-        {/* INLINE EDIT MODAL */}
+        {/* INLINE EDIT MODAL (if Edit Details clicked) */}
         {isEditing && (
           <div style={{
             position: 'fixed',
@@ -363,7 +217,7 @@ export default function AIPreview() {
           }}>
             <div style={{
               backgroundColor: '#FFFFFF',
-              borderRadius: '16px',
+              borderRadius: '14px',
               padding: '2rem',
               maxWidth: '480px',
               width: '100%',
@@ -376,11 +230,11 @@ export default function AIPreview() {
 
               <form onSubmit={handleSaveEdit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#102333' }}>Issue Name</label>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#102333' }}>Issue</label>
                   <input
                     type="text"
-                    value={editIssue}
-                    onChange={(e) => setEditIssue(e.target.value)}
+                    value={issueVal}
+                    onChange={(e) => setIssueVal(e.target.value)}
                     style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid #DDE7E2', outline: 'none' }}
                   />
                 </div>
@@ -388,23 +242,23 @@ export default function AIPreview() {
                 <div>
                   <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#102333' }}>Category</label>
                   <select
-                    value={editCategory}
-                    onChange={(e) => setEditCategory(e.target.value)}
+                    value={categoryVal}
+                    onChange={(e) => setCategoryVal(e.target.value)}
                     style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid #DDE7E2', outline: 'none' }}
                   >
                     <option value="Water Supply">Water Supply</option>
                     <option value="Street Light">Street Light</option>
-                    <option value="Roads">Roads</option>
-                    <option value="Garbage">Garbage</option>
+                    <option value="Roads / Infrastructure">Roads / Infrastructure</option>
+                    <option value="Garbage / Sanitation">Garbage / Sanitation</option>
                   </select>
                 </div>
 
                 <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#102333' }}>Location</label>
+                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#102333' }}>Ward</label>
                   <input
                     type="text"
-                    value={editLocation}
-                    onChange={(e) => setEditLocation(e.target.value)}
+                    value={wardVal}
+                    onChange={(e) => setWardVal(e.target.value)}
                     style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid #DDE7E2', outline: 'none' }}
                   />
                 </div>
@@ -413,55 +267,39 @@ export default function AIPreview() {
                   <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#102333' }}>Assigned Department</label>
                   <input
                     type="text"
-                    value={editAuthority}
-                    onChange={(e) => setEditAuthority(e.target.value)}
+                    value={deptVal}
+                    onChange={(e) => setDeptVal(e.target.value)}
                     style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid #DDE7E2', outline: 'none' }}
                   />
                 </div>
 
-                <div>
-                  <label style={{ fontSize: '0.82rem', fontWeight: 700, color: '#102333' }}>Priority</label>
-                  <select
-                    value={editPriority}
-                    onChange={(e) => setEditPriority(e.target.value)}
-                    style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid #DDE7E2', outline: 'none' }}
-                  >
-                    <option value="High">High</option>
-                    <option value="Medium">Medium</option>
-                    <option value="Low">Low</option>
-                  </select>
-                </div>
-
                 <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.5rem' }}>
                   <button type="button" onClick={() => setIsEditing(false)} className="btn btn-outline btn-full">Cancel</button>
-                  <button type="submit" className="btn btn-primary btn-full">Save Changes</button>
+                  <button type="submit" className="btn btn-primary btn-full" style={{ backgroundColor: '#35654B' }}>Save Changes</button>
                 </div>
               </form>
             </div>
           </div>
         )}
 
-        {/* BOTTOM BUTTONS */}
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: '1rem',
-          flexWrap: 'wrap'
-        }}>
+        {/* BOTTOM ACTION BUTTONS (EDIT DETAILS & CONFIRM & SUBMIT) */}
+        <div style={{ display: 'flex', gap: '1rem' }}>
           <button
             type="button"
             onClick={() => setIsEditing(true)}
-            className="btn btn-outline"
             style={{
-              padding: '0.85rem 1.75rem',
-              fontWeight: 700,
-              fontSize: '0.9rem',
-              borderColor: '#DDE7E2',
-              backgroundColor: '#FFFFFF'
+              flex: 1,
+              backgroundColor: '#FFFFFF',
+              color: '#102333',
+              border: '1px solid #DDE7E2',
+              borderRadius: '8px',
+              padding: '0.85rem',
+              fontSize: '0.92rem',
+              fontWeight: 800,
+              cursor: 'pointer',
+              letterSpacing: '0.5px'
             }}
           >
-            <Edit2 size={16} />
             EDIT DETAILS
           </button>
 
@@ -469,16 +307,21 @@ export default function AIPreview() {
             type="button"
             onClick={handleConfirmSubmit}
             disabled={isSubmitting}
-            className="btn btn-primary"
             style={{
-              padding: '0.85rem 2.25rem',
+              flex: 1,
+              backgroundColor: '#35654B',
+              color: '#FFFFFF',
+              border: 'none',
+              borderRadius: '8px',
+              padding: '0.85rem',
+              fontSize: '0.92rem',
               fontWeight: 800,
-              fontSize: '0.95rem',
-              boxShadow: '0 4px 14px rgba(8, 122, 85, 0.3)'
+              cursor: 'pointer',
+              letterSpacing: '0.5px',
+              boxShadow: '0 2px 8px rgba(53, 101, 75, 0.25)'
             }}
           >
-            {isSubmitting ? "REGISTERING GRIEVANCE..." : "CONFIRM & SUBMIT"}
-            <CheckCircle size={18} />
+            {isSubmitting ? "SUBMITTING..." : "CONFIRM & SUBMIT"}
           </button>
         </div>
       </div>
