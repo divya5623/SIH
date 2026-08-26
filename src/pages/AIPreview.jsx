@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mic, Image as ImageIcon, X } from 'lucide-react';
 import { useComplaints } from '../context/ComplaintContext';
+import { classifyGrievance } from '../utils/aiClassifier';
 
 export default function AIPreview() {
   const navigate = useNavigate();
@@ -9,14 +10,38 @@ export default function AIPreview() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Editable fields
-  const [issueVal, setIssueVal] = useState(currentDraft.issue || "paani ki samasya hai teen din se");
-  const [categoryVal, setCategoryVal] = useState(currentDraft.category || "Water Supply");
-  const [wardVal, setWardVal] = useState(currentDraft.ward || "Ward 5");
-  const [gpsVal, setGpsVal] = useState(currentDraft.gps || "12.8797° N, 74.8509° E");
-  const [deptVal, setDeptVal] = useState(currentDraft.authority || "Jal Vibhag / Water Department");
-  const [priorityVal, setPriorityVal] = useState(currentDraft.priority || "High Priority");
-  const [confidenceVal, setConfidenceVal] = useState(currentDraft.confidence || 73);
+  // Dynamic analysis from current draft description
+  const analysis = classifyGrievance(
+    currentDraft.description || currentDraft.audioTranscript || currentDraft.issue || "",
+    currentDraft.inputType === 'camera',
+    currentDraft.gps
+  );
+
+  // Editable fields initialized from AI analysis
+  const [issueVal, setIssueVal] = useState(currentDraft.issue || analysis.issue);
+  const [categoryVal, setCategoryVal] = useState(currentDraft.category || analysis.category);
+  const [wardVal, setWardVal] = useState(currentDraft.ward || analysis.ward);
+  const [gpsVal, setGpsVal] = useState(currentDraft.gps || analysis.gps);
+  const [deptVal, setDeptVal] = useState(currentDraft.authority || analysis.assignedDepartment);
+  const [priorityVal, setPriorityVal] = useState(currentDraft.priority || analysis.priority);
+  const [confidenceVal, setConfidenceVal] = useState(currentDraft.confidence || analysis.confidence);
+
+  useEffect(() => {
+    if (currentDraft.description || currentDraft.issue) {
+      const live = classifyGrievance(
+        currentDraft.description || currentDraft.audioTranscript || currentDraft.issue,
+        currentDraft.inputType === 'camera',
+        currentDraft.gps
+      );
+      setIssueVal(currentDraft.issue || live.issue);
+      setCategoryVal(currentDraft.category || live.category);
+      setWardVal(currentDraft.ward || live.ward);
+      setGpsVal(currentDraft.gps || live.gps);
+      setDeptVal(currentDraft.authority || live.assignedDepartment);
+      setPriorityVal(currentDraft.priority || live.priority);
+      setConfidenceVal(currentDraft.confidence || live.confidence);
+    }
+  }, [currentDraft]);
 
   const handleSaveEdit = (e) => {
     e.preventDefault();
@@ -246,10 +271,11 @@ export default function AIPreview() {
                     onChange={(e) => setCategoryVal(e.target.value)}
                     style={{ width: '100%', padding: '0.55rem 0.75rem', borderRadius: '8px', border: '1px solid #DDE7E2', outline: 'none' }}
                   >
+                    <option value="Roads / Infrastructure">Roads / Infrastructure</option>
                     <option value="Water Supply">Water Supply</option>
                     <option value="Street Light">Street Light</option>
-                    <option value="Roads / Infrastructure">Roads / Infrastructure</option>
                     <option value="Garbage / Sanitation">Garbage / Sanitation</option>
+                    <option value="Drainage & Sewerage">Drainage & Sewerage</option>
                   </select>
                 </div>
 
