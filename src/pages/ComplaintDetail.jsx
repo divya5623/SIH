@@ -12,7 +12,10 @@ import {
   Check, 
   X,
   ExternalLink,
-  Navigation
+  Navigation,
+  Play,
+  Sparkles,
+  Phone
 } from 'lucide-react';
 import Timeline from '../components/Timeline';
 import StatusBadge from '../components/StatusBadge';
@@ -21,25 +24,20 @@ import { useComplaints } from '../context/ComplaintContext';
 export default function ComplaintDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getComplaintById, updateResolution } = useComplaints();
+  const { getComplaintById, advanceStage, showToast } = useComplaints();
 
   const complaint = getComplaintById(id);
-  const [resolutionPrompt, setResolutionPrompt] = useState(false);
+  const [showSimulateAction, setShowSimulateAction] = useState(false);
 
-  const handleQuickResolve = () => {
-    navigate(`/complaints/${complaint.id}/verify`);
-  };
-
-  const handleNotYet = () => {
-    setResolutionPrompt(true);
-    setTimeout(() => setResolutionPrompt(false), 4000);
+  const handleAdvance = () => {
+    advanceStage(complaint.id);
   };
 
   return (
     <div style={{ backgroundColor: '#F7FAF8', minHeight: 'calc(100vh - 80px)', paddingBottom: '4rem' }}>
       <div className="page-wrapper">
         {/* Top Back Navigation */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <Link
             to="/complaints"
             style={{
@@ -55,7 +53,18 @@ export default function ComplaintDetail() {
             Back to My Complaints
           </Link>
 
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <button
+              type="button"
+              onClick={handleAdvance}
+              className="btn btn-outline btn-sm"
+              style={{ fontSize: '0.78rem', borderColor: '#2366B1', color: '#2366B1' }}
+              title="Simulates field engineer resolving the ticket"
+            >
+              <Play size={13} />
+              Simulate Department Fix
+            </button>
+
             <Link
               to={`/complaints/${complaint.id}/verify`}
               className="btn btn-outline-green btn-sm"
@@ -154,9 +163,14 @@ export default function ComplaintDetail() {
             padding: '1.75rem',
             boxShadow: '0 2px 8px rgba(16, 35, 51, 0.04)'
           }}>
-            <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#102333', marginBottom: '1.25rem' }}>
-              TIMELINE
-            </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontSize: '1.15rem', fontWeight: 800, color: '#102333' }}>
+                TIMELINE
+              </h3>
+              <span style={{ fontSize: '0.75rem', color: '#087A55', fontWeight: 700, backgroundColor: '#E8F6EF', padding: '2px 8px', borderRadius: '4px' }}>
+                Live Blockchain Log
+              </span>
+            </div>
             <Timeline steps={complaint.timeline} />
           </div>
 
@@ -193,7 +207,7 @@ export default function ComplaintDetail() {
                 position: 'absolute',
                 bottom: '8px',
                 left: '8px',
-                backgroundColor: 'rgba(16, 35, 51, 0.8)',
+                backgroundColor: 'rgba(16, 35, 51, 0.85)',
                 color: '#FFFFFF',
                 fontSize: '0.75rem',
                 padding: '3px 8px',
@@ -221,12 +235,11 @@ export default function ComplaintDetail() {
                 position: 'relative',
                 overflow: 'hidden'
               }}>
-                {/* SVG map visual */}
                 <svg width="100%" height="100%" style={{ position: 'absolute', top: 0, left: 0, opacity: 0.25 }}>
-                  <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+                  <pattern id="gridMap" width="20" height="20" patternUnits="userSpaceOnUse">
                     <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#087A55" strokeWidth="0.8" />
                   </pattern>
-                  <rect width="100%" height="100%" fill="url(#grid)" />
+                  <rect width="100%" height="100%" fill="url(#gridMap)" />
                 </svg>
                 <div style={{
                   width: '38px',
@@ -269,14 +282,16 @@ export default function ComplaintDetail() {
               Was your issue resolved?
             </h3>
             <p style={{ fontSize: '0.88rem', color: '#5A6D7C' }}>
-              Your feedback verifies the Gram Panchayat action report and updates transparency records.
+              Your feedback verifies the Gram Panchayat action report and closes the accountability loop.
             </p>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             <button
               type="button"
-              onClick={handleNotYet}
+              onClick={() => {
+                showToast("⚠️ Not Resolved Logged", "Escalation ticket generated for Block Development Officer (BDO).");
+              }}
               className="btn btn-outline"
               style={{
                 borderColor: '#DDE7E2',
@@ -288,9 +303,8 @@ export default function ComplaintDetail() {
               NOT YET
             </button>
 
-            <button
-              type="button"
-              onClick={handleQuickResolve}
+            <Link
+              to={`/complaints/${complaint.id}/verify`}
               className="btn btn-primary"
               style={{
                 fontWeight: 800,
@@ -300,27 +314,9 @@ export default function ComplaintDetail() {
             >
               <CheckCircle size={16} />
               YES, RESOLVED
-            </button>
+            </Link>
           </div>
         </div>
-
-        {resolutionPrompt && (
-          <div style={{
-            marginTop: '1rem',
-            backgroundColor: '#FEF3D6',
-            color: '#B46B00',
-            padding: '0.75rem 1.25rem',
-            borderRadius: '10px',
-            fontSize: '0.88rem',
-            fontWeight: 600,
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem'
-          }}>
-            <Clock size={16} />
-            Escalation reminder logged. The authority has been prompted to expedite action.
-          </div>
-        )}
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
+import JudgeDemoBanner from './components/JudgeDemoBanner';
 import Landing from './pages/Landing';
 import ChooseInput from './pages/ChooseInput';
 import AIPreview from './pages/AIPreview';
@@ -68,6 +69,9 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+      {/* Floating Judge Quick Demo & Scenario Switcher */}
+      <JudgeDemoBanner />
     </div>
   );
 }
