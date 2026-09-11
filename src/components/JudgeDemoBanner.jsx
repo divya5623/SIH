@@ -6,6 +6,11 @@ import { useComplaints } from '../context/ComplaintContext';
 export default function JudgeDemoBanner() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  // Hidden on official public site — only active if ?demo=true is in the query parameters
+  const showBanner = typeof window !== 'undefined' && new URLSearchParams(location.search).get('demo') === 'true';
+  if (!showBanner) return null;
+
   const { loadScenario, resetAllData, activeToast, currentUser, setCurrentUser, complaints, advanceStage } = useComplaints();
   const [isExpanded, setIsExpanded] = useState(false);
 

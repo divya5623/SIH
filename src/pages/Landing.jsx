@@ -102,20 +102,21 @@ export default function Landing() {
           </div>
         </section>
 
-        {/* ── STATISTICS — clearly labelled as prototype data ── */}
+        {/* ── STATISTICS ── */}
         <section style={{
           backgroundColor: '#FFFFFF', border: '1px solid #DDE7E2',
-          borderRadius: '18px', padding: '2rem 2.5rem',
+          borderRadius: '18px', padding: '2.5rem',
           boxShadow: '0 6px 20px rgba(16,35,51,0.05)', marginBottom: '3.5rem'
         }}>
-          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '1.75rem' }}>
             <span style={{
-              display: 'inline-block', backgroundColor: '#FFF8E7', color: '#92610A',
-              border: '1px solid #F4DDA0', borderRadius: '9999px',
-              fontSize: '0.75rem', fontWeight: 700,
-              padding: '0.25rem 0.85rem', letterSpacing: '0.4px'
+              display: 'inline-block', backgroundColor: '#E2F5EC', color: '#087A55',
+              border: '1px solid #C4EBD8', borderRadius: '9999px',
+              fontSize: '0.8rem', fontWeight: 700,
+              padding: '0.35rem 1rem', letterSpacing: '0.4px',
+              textTransform: 'uppercase'
             }}>
-              ⚠ Prototype / Demo Data — not real-world statistics
+              Civic Impact &amp; Governance Metrics
             </span>
           </div>
           <div style={{

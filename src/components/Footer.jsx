@@ -122,14 +122,13 @@ export default function Footer() {
           gap: '0.75rem'
         }}>
           <p style={{ fontSize: '0.8rem', color: '#4D6275', margin: 0 }}>
-            © {new Date().getFullYear()} Awaaz Sarpanch. Built by{' '}
+            © {new Date().getFullYear()} Awaaz Sarpanch. Founded &amp; Developed by{' '}
             <Link to="/founder" style={{ color: '#4CB87A', textDecoration: 'none', fontWeight: 600 }}>
               Divya Shettar
-            </Link>{' '}
-            · Smart India Hackathon Project
+            </Link>
           </p>
           <p style={{ fontSize: '0.8rem', color: '#4D6275', margin: 0 }}>
-            Prototype · Demo · Not for production use
+            Voice-First AI Civic Governance for Citizens &amp; Panchayats
           </p>
         </div>
       </div>

@@ -94,7 +94,7 @@ export default function IdentityVerification() {
             Verify Your Identity
           </h1>
           <p style={{ fontSize: '0.95rem', color: '#5A6D7C', fontWeight: 500 }}>
-            This is a demonstration for prototype.
+            Secure Citizen Verification via Mobile OTP
           </p>
         </div>
 

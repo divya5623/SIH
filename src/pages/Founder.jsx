@@ -210,9 +210,9 @@ export default function Founder() {
                 href="https://sih-lake-sigma.vercel.app/"
                 target="_blank" rel="noopener noreferrer"
                 style={linkBtnStyle('#087A55', '#FFFFFF')}
-                aria-label="Awaaz Sarpanch live prototype"
+                aria-label="Awaaz Sarpanch official platform"
               >
-                <ExternalLink size={16} /> Live Prototype
+                <ExternalLink size={16} /> Official Platform
               </a>
             </div>
           </div>
