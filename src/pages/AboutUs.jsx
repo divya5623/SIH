@@ -37,7 +37,7 @@ const pillars = [
 
 export default function AboutUs() {
   useEffect(() => {
-    document.title = 'About Awaaz Sarpanch | Founded by Divya Shettar';
+    document.title = 'About Awaaz Sarpanch | Voice-First AI Civic Governance';
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute(
@@ -73,7 +73,7 @@ export default function AboutUs() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "AboutPage",
-            "name": "About Awaaz Sarpanch | Founded by Divya Shettar",
+            "name": "About Awaaz Sarpanch | Voice-First AI Civic Governance",
             "url": "https://sih-lake-sigma.vercel.app/about",
             "description": "Learn about Awaaz Sarpanch, a voice-first AI civic governance platform founded and developed by Divya Shettar to improve communication between citizens and local authorities.",
             "mainEntity": {
