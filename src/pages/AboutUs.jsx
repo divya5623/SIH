@@ -1,10 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Target, Award, Mic, Cpu, Route, Eye } from 'lucide-react';
-
-if (typeof document !== 'undefined') {
-  document.title = 'About Awaaz Sarpanch | Voice-First AI Civic Governance';
-}
 
 const pillars = [
   {
@@ -40,6 +36,34 @@ const pillars = [
 ];
 
 export default function AboutUs() {
+  useEffect(() => {
+    document.title = 'About Awaaz Sarpanch | Founded by Divya Shettar';
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        'content',
+        'Learn about Awaaz Sarpanch, a voice-first AI civic governance platform founded and developed by Divya Shettar to improve communication between citizens and local authorities.'
+      );
+    }
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      canonical.setAttribute('href', 'https://sih-lake-sigma.vercel.app/about');
+    }
+
+    return () => {
+      document.title = 'Awaaz Sarpanch | Divya Shettar — Founder & Project Lead';
+      if (metaDesc) {
+        metaDesc.setAttribute(
+          'content',
+          'Awaaz Sarpanch, founded and developed by Divya Shettar, is a voice-first AI civic governance platform designed to make communication between citizens and Gram Panchayat authorities more accessible, transparent and accountable.'
+        );
+      }
+      if (canonical) {
+        canonical.setAttribute('href', 'https://sih-lake-sigma.vercel.app/');
+      }
+    };
+  }, []);
+
   return (
     <div style={{ backgroundColor: '#F7FAF8', minHeight: 'calc(100vh - 80px)', paddingBottom: '5rem' }}>
       {/* Page-specific JSON-LD */}
@@ -49,15 +73,17 @@ export default function AboutUs() {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "AboutPage",
-            "name": "About Awaaz Sarpanch",
+            "name": "About Awaaz Sarpanch | Founded by Divya Shettar",
             "url": "https://sih-lake-sigma.vercel.app/about",
-            "description": "Awaaz Sarpanch is a voice-first AI civic-governance platform founded by Divya Shettar to bridge the communication gap between citizens and Gram Panchayat authorities.",
+            "description": "Learn about Awaaz Sarpanch, a voice-first AI civic governance platform founded and developed by Divya Shettar to improve communication between citizens and local authorities.",
             "mainEntity": {
               "@type": "SoftwareApplication",
+              "@id": "https://sih-lake-sigma.vercel.app/#app",
               "name": "Awaaz Sarpanch",
               "url": "https://sih-lake-sigma.vercel.app/",
               "founder": {
                 "@type": "Person",
+                "@id": "https://sih-lake-sigma.vercel.app/founder#divya-shettar",
                 "name": "Divya Shettar",
                 "url": "https://sih-lake-sigma.vercel.app/founder"
               }

@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Mic, Cpu, Building2, TrendingUp, CheckCircle, ArrowRight, Shield } from 'lucide-react';
 import VillageIllustration from '../components/VillageIllustration';
 
 export default function HowItWorks() {
+  useEffect(() => {
+    document.title = 'How Awaaz Sarpanch Works | Voice-First AI Civic Governance';
+    const canonical = document.querySelector('link[rel="canonical"]');
+    if (canonical) {
+      canonical.setAttribute('href', 'https://sih-lake-sigma.vercel.app/how-it-works');
+    }
+    return () => {
+      document.title = 'Awaaz Sarpanch | Divya Shettar — Founder & Project Lead';
+      if (canonical) {
+        canonical.setAttribute('href', 'https://sih-lake-sigma.vercel.app/');
+      }
+    };
+  }, []);
+
   const steps = [
     {
       num: "01",
