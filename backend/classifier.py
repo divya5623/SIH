@@ -146,45 +146,59 @@ def classify_with_keywords(text: str) -> dict:
         total = 0
         for kw in keywords:
             kw_lower = kw.lower()
-            if len(kw_lower) <= 3:
-                if kw_lower in words_lower or kw in words:
-                    total += 1
-            else:
-                if kw_lower in words_lower or kw in words:
-                    total += 3
-                elif len(kw) >= 4 and (kw in raw or kw_lower in raw.lower()):
-                    total += 2
+            if kw in raw or kw_lower in raw.lower():
+                total += 3 if len(kw) >= 3 else 1
         return total
 
     road_kw = [
-        # Kannada script
-        'raste','rasthe','roadu','rodu','gundi','haalagide','kettuhogide','kettu',
-        # Hindi
-        'sadak','gaddha','kharab','rasta','pothole','potholes',
+        # Kannada (script + transliterated)
+        'ರಸ್ತೆ', 'ರಸ್ತೆಯು', 'ಹಾಳಾಗಿದೆ', 'ಹಾಳಾದ', 'ಗುಂಡಿ', 'ಗುಂಡಿಗಳು', 'ಕೆಟ್ಟುಹೋಗಿದೆ', 'ಸೇತುವೆ', 'ಡಾಂಬರು',
+        'raste', 'rasthe', 'roadu', 'rodu', 'gundi', 'haalagide', 'kettuhogide', 'kettu',
+        # Hindi (script + transliterated)
+        'सड़क', 'रास्ता', 'गड्ढा', 'गड्ढे', 'खराब', 'टूटी', 'पुल',
+        'sadak', 'gaddha', 'kharab', 'rasta', 'pothole', 'potholes',
         # English
-        'road','roads','highway','pavement','culvert','bridge','damaged road',
-        # Telugu/Tamil/Marathi
-        'rasta','khaddha',
+        'road', 'roads', 'highway', 'pavement', 'culvert', 'bridge', 'damaged road',
     ]
     electric_kw = [
-        'beedi deepa','beedideepa','belaku','vidyut','kattale','uriyuttilla',
-        'bijli','batti','andhera','khamba',
-        'street light','streetlight','electricity','power cut','dark','fuse','lamp',
+        # Kannada (script + transliterated)
+        'ಬೀದಿ ದೀಪ', 'ಬೀದಿದೀಪ', 'ಬೀದಿ', 'ದೀಪ', 'ಬೆಳಕು', 'ಕತ್ತಲೆ', 'ಉರಿಯುತ್ತಿಲ್ಲ', 'ವಿದ್ಯುತ್', 'ಕಂಬ',
+        'beedi deepa', 'beedideepa', 'belaku', 'vidyut', 'kattale', 'uriyuttilla',
+        # Hindi (script + transliterated)
+        'स्ट्रीट लाइट', 'बिजली', 'बत्ती', 'अंधेरा', 'खंभा', 'लाइट',
+        'bijli', 'batti', 'andhera', 'khamba',
+        # English
+        'street light', 'streetlight', 'electricity', 'power cut', 'dark', 'fuse', 'lamp',
     ]
     water_kw = [
-        'neeru','neerina','sorike','borewell','neerilla',
-        'paani','pani','jal','leak','leakage','tanki','handpump','nall',
-        'water','pipeline','drinking water','tap water','water supply','pipe',
+        # Kannada (script + transliterated)
+        'ನೀರು', 'ಕುಡಿಯುವ', 'ಕುಡಿಯುವ ನೀರು', 'ನೀರಿನ', 'ಬರುತ್ತಿಲ್ಲ', 'ಸೋರಿಕೆ', 'ಕೊಳವೆಬಾವಿ', 'ಬೋರ್ವೆಲ್', 'ಪೈಪ್',
+        'neeru', 'neerina', 'sorike', 'borewell', 'neerilla', 'kudiyuva',
+        # Hindi (script + transliterated)
+        'पानी', 'जल', 'नल', 'पाइपलाइन', 'लीकेज', 'बोरवेल', 'टंकी',
+        'paani', 'pani', 'jal', 'leak', 'leakage', 'tanki', 'handpump', 'nall',
+        # English
+        'water', 'pipeline', 'drinking water', 'tap water', 'water supply', 'pipe',
     ]
     drain_kw = [
-        'charandi','gatara','kolache','hariyuttide',
-        'nali','naali','nala','gutter','sewer','keechad',
-        'drain','drainage','sewage','overflow','clogged','blocked drain',
+        # Kannada (script + transliterated)
+        'ಚರಂಡಿ', 'ಗಟಾರ', 'ಕೊಳಚೆ', 'ಹರಿಯುತ್ತಿದೆ', 'ತುಂಬಿ', 'ತುಂಬಿ ಹರಿಯುತ್ತಿದೆ',
+        'charandi', 'gatara', 'kolache', 'hariyuttide', 'tumbi',
+        # Hindi (script + transliterated)
+        'नाली', 'नाला', 'गटर', 'सीवर', 'कीचड़', 'ओवरफ्लो',
+        'nali', 'naali', 'nala', 'gutter', 'sewer', 'keechad',
+        # English
+        'drain', 'drainage', 'sewage', 'overflow', 'clogged', 'blocked drain',
     ]
     garbage_kw = [
-        'kasa','tyajya','totti','vasane','galeeju',
-        'kachra','kooda','safai','badboo','gandagi',
-        'garbage','waste','trash','litter','smell','dump','sanitation',
+        # Kannada (script + transliterated)
+        'ಕಸ', 'ತ್ಯಾಜ್ಯ', 'ತೊಟ್ಟಿ', 'ವಾಸನೆ', 'ಗಲೀಜು', 'ಸ್ವಚ್ಛತೆ',
+        'kasa', 'tyajya', 'totti', 'vasane', 'galeeju',
+        # Hindi (script + transliterated)
+        'कचरा', 'कूड़ा', 'सफाई', 'बदबू', 'गंदगी',
+        'kachra', 'kooda', 'safai', 'badboo', 'gandagi',
+        # English
+        'garbage', 'waste', 'trash', 'litter', 'smell', 'dump', 'sanitation',
     ]
 
     scores = {

@@ -27,6 +27,11 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from dotenv import load_dotenv
 
+import sys
+from pathlib import Path
+# Ensure backend directory is in sys.path whether run from root or backend/
+sys.path.insert(0, str(Path(__file__).parent.resolve()))
+
 from database import init_db, get_db, Complaint, generate_grv_id
 from bhashini import transcribe_with_fallback
 from classifier import classify_grievance
@@ -36,21 +41,25 @@ load_dotenv()
 # ─── App Setup ─────────────────────────────────────────────────────────────────
 app = FastAPI(
     title="AWAAZ SARPANCH API",
-    description="Real backend for civic grievance management — AWAAZ SARPANCH",
+    description="Backend for civic grievance management — AWAAZ SARPANCH",
     version="1.0.0"
 )
 
-# CORS — allow frontend on localhost and GitHub Pages
+# CORS — explicitly allow production Vercel frontend and local development
+allowed_origins = [
+    "https://sih-lake-sigma.vercel.app",
+    "http://localhost:5173",
+    "http://localhost:5174",
+    "http://127.0.0.1:5173",
+    "https://divya5623.github.io",
+]
+custom_frontend = os.getenv("FRONTEND_URL")
+if custom_frontend and custom_frontend not in allowed_origins:
+    allowed_origins.append(custom_frontend)
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://127.0.0.1:5173",
-        "https://divya5623.github.io",
-        os.getenv("FRONTEND_URL", "*"),
-        "*"  # Allow all for hackathon demo
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -3,7 +3,9 @@
  * Connects frontend to FastAPI backend at localhost:8000
  */
 
-const BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
+// In development: default to http://localhost:8000
+// In production: uses VITE_API_URL environment variable (Render backend)
+const BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:8000" : "");
 
 /**
  * Transcribe audio blob using Bhashini API (via backend)
