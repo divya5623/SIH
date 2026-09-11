@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Header from './components/Header';
+import Footer from './components/Footer';
 import JudgeDemoBanner from './components/JudgeDemoBanner';
 import Landing from './pages/Landing';
 import ChooseInput from './pages/ChooseInput';
@@ -23,6 +24,7 @@ import HowItWorks from './pages/HowItWorks';
 import Features from './pages/Features';
 import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
+import Founder from './pages/Founder';
 
 export default function App() {
   const location = useLocation();
@@ -31,14 +33,15 @@ export default function App() {
   return (
     <div className="app-container">
       {!isAdmin && <Header />}
-      
-      <main className="main-content">
+
+      <main className="main-content" id="main-content">
         <Routes>
           {/* Public / Landing Routes */}
           <Route path="/" element={<Landing />} />
           <Route path="/how-it-works" element={<HowItWorks />} />
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<AboutUs />} />
+          <Route path="/founder" element={<Founder />} />
           <Route path="/contact" element={<Contact />} />
 
           {/* Grievance Submission Flow */}
@@ -55,7 +58,7 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<IdentityVerification />} />
 
-          {/* Admin / Authority Portal */}
+          {/* Admin / Authority Portal — not indexed by search engines */}
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/complaints" element={<AdminComplaints />} />
           <Route path="/admin/recurring" element={<RecurringIssues />} />
@@ -69,6 +72,9 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
+
+      {/* Footer — visible on all public pages */}
+      {!isAdmin && <Footer />}
 
       {/* Floating Judge Quick Demo & Scenario Switcher */}
       <JudgeDemoBanner />
