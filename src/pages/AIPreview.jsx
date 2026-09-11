@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mic, Image as ImageIcon, X } from 'lucide-react';
 import { useComplaints } from '../context/ComplaintContext';
-import { classifyGrievance } from '../utils/aiClassifier';
+import { saveComplaint } from '../utils/api';
 
 export default function AIPreview() {
   const navigate = useNavigate();
@@ -10,36 +10,24 @@ export default function AIPreview() {
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Dynamic analysis from current draft description
-  const analysis = classifyGrievance(
-    currentDraft.description || currentDraft.audioTranscript || currentDraft.issue || "",
-    currentDraft.inputType === 'camera',
-    currentDraft.gps
-  );
-
-  // Editable fields initialized from AI analysis
-  const [issueVal, setIssueVal] = useState(currentDraft.issue || analysis.issue);
-  const [categoryVal, setCategoryVal] = useState(currentDraft.category || analysis.category);
-  const [wardVal, setWardVal] = useState(currentDraft.ward || analysis.ward);
-  const [gpsVal, setGpsVal] = useState(currentDraft.gps || analysis.gps);
-  const [deptVal, setDeptVal] = useState(currentDraft.authority || analysis.assignedDepartment);
-  const [priorityVal, setPriorityVal] = useState(currentDraft.priority || analysis.priority);
-  const [confidenceVal, setConfidenceVal] = useState(currentDraft.confidence || analysis.confidence);
+  // Use classification already done in ChooseInput (via Gemini/keyword)
+  const [issueVal, setIssueVal] = useState(currentDraft.issue || currentDraft.description || '');
+  const [categoryVal, setCategoryVal] = useState(currentDraft.category || 'General');
+  const [wardVal, setWardVal] = useState(currentDraft.ward || 'Ward 5');
+  const [gpsVal, setGpsVal] = useState(currentDraft.gps || '12.8797° N, 74.8509° E');
+  const [deptVal, setDeptVal] = useState(currentDraft.authority || 'Gram Panchayat Office');
+  const [priorityVal, setPriorityVal] = useState(currentDraft.priority || 'Medium Priority');
+  const [confidenceVal, setConfidenceVal] = useState(currentDraft.confidence || 70);
 
   useEffect(() => {
-    if (currentDraft.description || currentDraft.issue) {
-      const live = classifyGrievance(
-        currentDraft.description || currentDraft.audioTranscript || currentDraft.issue,
-        currentDraft.inputType === 'camera',
-        currentDraft.gps
-      );
-      setIssueVal(currentDraft.issue || live.issue);
-      setCategoryVal(currentDraft.category || live.category);
-      setWardVal(currentDraft.ward || live.ward);
-      setGpsVal(currentDraft.gps || live.gps);
-      setDeptVal(currentDraft.authority || live.assignedDepartment);
-      setPriorityVal(currentDraft.priority || live.priority);
-      setConfidenceVal(currentDraft.confidence || live.confidence);
+    if (currentDraft.category) {
+      setIssueVal(currentDraft.issue || currentDraft.description || '');
+      setCategoryVal(currentDraft.category);
+      setWardVal(currentDraft.ward || 'Ward 5');
+      setGpsVal(currentDraft.gps || '12.8797° N, 74.8509° E');
+      setDeptVal(currentDraft.authority || 'Gram Panchayat Office');
+      setPriorityVal(currentDraft.priority || 'Medium Priority');
+      setConfidenceVal(currentDraft.confidence || 70);
     }
   }, [currentDraft]);
 
@@ -59,9 +47,28 @@ export default function AIPreview() {
     showToast("✏️ Details Updated", "Grievance details updated.");
   };
 
-  const handleConfirmSubmit = () => {
+  const handleConfirmSubmit = async () => {
     setIsSubmitting(true);
-    setTimeout(() => {
+    showToast('🔄 Saving...', 'Saving complaint to database...');
+
+    // Save to backend (SQLite) via API
+    const complaintPayload = {
+      description: currentDraft.description || issueVal,
+      transcript: currentDraft.audioTranscript || currentDraft.description || issueVal,
+      language: currentDraft.language || 'kn-IN',
+      category: categoryVal,
+      department: deptVal,
+      priority: priorityVal,
+      confidence: confidenceVal,
+      ward: wardVal,
+      gps: gpsVal,
+      mobile: '',
+    };
+
+    const result = await saveComplaint(complaintPayload);
+
+    if (result.success) {
+      // Also add to local context for immediate UI display
       const newGrievance = addComplaint({
         issue: issueVal,
         category: categoryVal,
@@ -72,13 +79,27 @@ export default function AIPreview() {
         priority: priorityVal.includes('High') ? 'High' : (priorityVal.includes('Medium') ? 'Medium' : 'Low'),
         confidence: confidenceVal,
         description: currentDraft.description || issueVal,
-        audioDuration: currentDraft.audioDuration || "00:06",
-        inputType: currentDraft.inputType || "voice",
-        image: currentDraft.image || "https://images.unsplash.com/photo-1584467735815-f778f274e296?auto=format&fit=crop&w=600&q=80"
+        audioDuration: currentDraft.audioDuration || '00:06',
+        inputType: currentDraft.inputType || 'voice',
+        image: currentDraft.image || '',
+        grv_id: result.complaint?.grv_id || null,
+        backend_id: result.complaint?.id || null,
       });
 
+      showToast('✅ Saved to Database!', `ID: ${result.complaint?.grv_id || newGrievance.id}`);
+      navigate('/complaint/submitted', { state: { grievanceId: newGrievance.id, grvId: result.complaint?.grv_id } });
+    } else {
+      showToast('⚠️ Offline Mode', 'Saved locally. Will sync when backend is online.');
+      const newGrievance = addComplaint({
+        issue: issueVal, category: categoryVal, ward: wardVal,
+        location: `${wardVal}, Kalyanpur Gram Panchayat`, gps: gpsVal,
+        authority: deptVal, priority: priorityVal.includes('High') ? 'High' : 'Medium',
+        confidence: confidenceVal, description: currentDraft.description || issueVal,
+        audioDuration: currentDraft.audioDuration || '00:06',
+        inputType: currentDraft.inputType || 'voice', image: currentDraft.image || '',
+      });
       navigate('/complaint/submitted', { state: { grievanceId: newGrievance.id } });
-    }, 400);
+    }
   };
 
   return (

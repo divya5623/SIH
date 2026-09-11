@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+python-multipart
+sqlalchemy
+requests
+google-generativeai
+python-dotenv
+aiofiles
+httpx

@@ -9,8 +9,8 @@ export default function ComplaintSubmitted() {
   const { complaints, showToast } = useComplaints();
   const [copied, setCopied] = useState(false);
 
-  const grievanceId = location.state?.grievanceId || (complaints[0]?.id || "GRV-2026-00125");
-  const complaint = complaints.find(c => c.id === grievanceId) || complaints[0];
+  const grievanceId = location.state?.grvId || location.state?.grievanceId || (complaints[0]?.grv_id || complaints[0]?.id || "GRV-2026-00125");
+  const complaint = complaints.find(c => c.id === (location.state?.grievanceId)) || complaints[0];
 
   const handleCopy = () => {
     navigator.clipboard.writeText(grievanceId);
