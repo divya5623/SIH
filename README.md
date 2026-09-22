@@ -1,131 +1,302 @@
-# AWAAZ SARPANCH (आवाज़ सरपंच)
-> **"Citizens Speak. AI Understands. Authorities Act."**  
-> *Voice-first AI for accessible, transparent and accountable local governance.*
 
-A production-ready, fully responsive React + Vite civic grievance reporting and tracking web application recreating the **AWAAZ SARPANCH** interface with high fidelity.
+# AWAAZ SARPANCH 🇮🇳
+### Voice-First AI for Accessible, Transparent & Accountable Local Governance
 
----
+> **Citizens Speak. AI Understands. Authorities Act.**
 
-## 🌟 Key Capabilities & Complete 13-Screen Architecture
-
-1. **Screen 1 — Landing Page (`/`)**
-   - Hero badge (`Voice-first • AI-Powered • Citizen-Centric`), bold typography (`AWAAZ` in green, `SARPANCH` in navy).
-   - Action buttons: `FILE A COMPLAINT`, `AI / AUTHORITY PORTAL`, and `SEE HOW IT WORKS`.
-   - Authentic Indian village SVG illustration (banyan tree, Panchayat bhavan, solar lighting, citizen holding smartphone with voice ripples).
-   - Statistics card (`12,458+ Received`, `8,745+ Resolved`, `96.2% Satisfaction Rate`, `245+ Active Authorities`).
-   - 5-step interactive process breakdown (`Speak or Type`, `AI Understands`, `Authority Identified`, `Track & Actions`, `Resolution Verified`).
-
-2. **Screen 2 — Choose Input (`/report`)**
-   - **Card 1 (Speak - Green):** Microphone icon, animated audio waveform, recording state indicator, interactive recording trigger.
-   - **Card 2 (Camera - Blue):** Camera icon, sample photo preview with water leakage detection badge.
-   - **Card 3 (Type - Purple):** Edit pencil icon, natural grievance text entry area.
-   - **Location Card:** Auto-GPS toggle with coordinate detection (`12.8797° N, 74.8509° E • Ward 5, Near Govt School`).
-   - Large green `CONTINUE` button.
-
-3. **Screen 3 — AI Understanding Preview (`/report/preview`)**
-   - Input preview cards for recorded audio (`00:06` waveform) and evidence image.
-   - Structured AI extraction table: Issue, Category, Ward, GPS coordinates, Assigned Department, High Priority, and 94% confidence progress meter.
-   - `EDIT DETAILS` and `CONFIRM & SUBMIT` actions.
-
-4. **Screen 4 — Complaint Submitted / Tracking (`/complaint/submitted`)**
-   - Registered badge, generated Grievance ID (`GRV-2026-00125`), submission timestamp.
-   - 6-stage vertical progress timeline with green milestone checkmarks.
-   - Share Grievance card with `COPY ID`, `SMS`, and `Email` share triggers.
-   - `VIEW MY COMPLAINTS` button.
-
-5. **Screen 5 — My Complaints (`/complaints`)**
-   - Category tabs: `All`, `In Progress`, `Resolved`.
-   - Live search filter by ID, issue name, or ward.
-   - Color-coded status badges (`In Progress`, `Resolved`, `Closed`, `Escalated`).
-   - Bottom 24x7 helpline card (`1800-123-4567`).
-
-6. **Screen 6 — Complaint Details / Citizen View (`/complaints/:id`)**
-   - Grievance metadata, priority indicator, assigned department.
-   - 6-step progress timeline.
-   - Photo evidence and interactive radar map coordinate view.
-   - Citizen resolution feedback actions (`YES, RESOLVED` & `NOT YET`).
-
-7. **Screen 7 — Admin Dashboard (`/admin`)**
-   - Dark navy vertical sidebar with administrative navigation.
-   - 4 Top-level metric cards (`128 Total Complaints`, `24 In Progress`, `86 Resolved`, `7 Escalated`).
-   - Donut Chart breakdown for complaints by category (Water Supply, Street Light, Roads, Garbage, Others).
-   - Live recent grievance feed.
-
-8. **Screen 8 — All Complaints Admin View (`/admin/complaints`)**
-   - Department category filter, status filter, and live text search.
-   - Complete table with ID, Issue, Ward, Department, Priority, Status, and Action.
-   - Realistic pagination controls (`1 2 3 4 5 ... 26 >`) and result counter.
-
-9. **Screen 9 — Recurring Issues / Cluster Detection (`/admin/recurring`)**
-   - Spatial cluster warning alert for repeated neighborhood issues.
-   - Hotspot table with complaint volume, trend indicator (`up trend`), and severity badge.
-   - AI Preventive governance insight card with `VIEW FULL ANALYTICS` navigation.
-
-10. **Screen 10 — Verify Resolution (`/complaints/:id/verify`)**
-    - Multi-choice citizen verification:
-      - `YES, RESOLVED` (Green)
-      - `NOT COMPLETELY RESOLVED` (Red/Light Red)
-      - `NOT RESOLVED` (Blue/Light Blue)
-    - Optional citizen feedback comment area and confetti completion animation.
-
-11. **Screen 11 — Login (`/login`)**
-    - Split-screen layout with village art and white login card.
-    - Role selector (`Citizen` vs `Panchayat Admin`).
-    - Password visibility toggle and fast demo login.
-
-12. **Screen 12 & 13 — Identity Verification & Success (`/register`)**
-    - Mobile number OTP trigger.
-    - 6-digit OTP verification inputs with auto-advance.
-    - Citizen ID card issuance (`CIT-IND-000124`) and direct dashboard redirection.
-
-13. **Supporting Navigation Pages:**
-    - `/how-it-works`
-    - `/features`
-    - `/about`
-    - `/contact`
-    - `/admin/analytics`
-    - `/admin/authority`
-    - `/admin/reports`
-    - `/admin/users`
-    - `/admin/settings`
+**Team:** Code Nexa  
+**Team ID:** 138406  
+**Problem Statement ID:** SIH26202  
+**Category:** Smart Automation  
+**Theme:** Software / Student Innovation  
+**Organization:** AICTE
 
 ---
 
-## 🎨 Design Tokens & Brand Colors
+## 📌 About the Project
 
-- **Primary Green:** `#087A55`
-- **Dark Green:** `#07563F`
-- **Dark Navy:** `#102333`
-- **Blue Accent:** `#2366B1`
-- **Purple Accent:** `#7150A8`
-- **Light Background:** `#F7FAF8`
-- **White:** `#FFFFFF`
-- **Border:** `#DDE7E2`
-- **Success:** `#1D9B61`
-- **Warning:** `#F4A62A`
-- **Danger:** `#E94B4B`
-- **Font Family:** `Inter, sans-serif`
+**Awaaz Sarpanch** is a voice-first, AI-powered civic grievance reporting and tracking platform designed to make local governance more accessible to citizens.
+
+Many citizens face difficulties when reporting civic problems because of:
+
+- Language barriers
+- Limited digital literacy
+- Uncertainty about the correct department
+- Lack of complaint tracking
+- Limited visibility into grievance resolution
+
+Awaaz Sarpanch allows citizens to **speak or type their complaints naturally**. The system helps interpret the complaint, identify the relevant service or department, create a trackable grievance, and provide visibility into its progress.
+
+### Our Vision
+
+> Make government services easier to access by allowing citizens to communicate in a natural and familiar way.
 
 ---
 
-## 🚀 Quick Start Guide
+## 🎯 Key Features
 
-1. Navigate to the project directory:
-   ```bash
-   cd C:\Users\LENOVO\.gemini\antigravity\scratch\awaaz-sarpanch-app
-   ```
+### 👥 Citizen Platform
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
+- Voice-based complaint reporting
+- Text-based complaint submission
+- Multilingual-friendly interface
+- Location and ward information
+- AI-assisted complaint understanding
+- Complaint tracking with grievance ID
+- Complaint status timeline
+- Resolution verification and feedback
 
-3. Start the local development server:
-   ```bash
-   npm run dev
-   ```
+### 🤖 AI-Assisted Processing
 
-4. Open your browser at:
-   ```
-   http://localhost:5173
-   ```
+- Speech-to-text input
+- Complaint classification
+- Service and department identification
+- Priority identification
+- Confidence-aware processing
+- Human verification for uncertain cases
+- Recurring issue and complaint-cluster insights
+
+### 🏛️ Administrative Dashboard
+
+- Complaint overview and statistics
+- Complaint filtering and searching
+- Department-wise complaint information
+- Priority and status monitoring
+- Recurring issue detection
+- Resolution verification
+- Administrative analytics
+
+---
+
+## 🧩 How the System Works
+
+```text
+Citizen speaks or types a complaint
+                ↓
+Input captured by the platform
+                ↓
+Speech-to-text / Text processing
+                ↓
+AI-based complaint understanding
+                ↓
+Category and department identification
+                ↓
+Confidence check and verification
+                ↓
+Grievance record creation
+                ↓
+Citizen tracking + Admin dashboard
+                ↓
+Resolution feedback and monitoring
+```
+
+---
+
+## 🏗️ System Architecture
+
+The platform is organised into the following layers:
+
+### 1. Presentation Layer
+
+- React
+- Vite
+- Responsive user interface
+- Citizen and administration screens
+
+### 2. Backend and API Layer
+
+- Python
+- FastAPI
+- Complaint processing APIs
+- Authentication and request handling
+- Integration with AI services
+
+### 3. AI and Language Layer
+
+- Speech-to-text processing
+- Bhashini integration reference
+- AI-assisted natural language understanding
+- Indic script and language processing
+- Complaint classification and routing
+
+### 4. Data Layer
+
+- Complaint records
+- User information
+- Grievance status history
+- SQLite-based backend storage
+- Future scalability through a production database
+
+### 5. Output Layer
+
+- Citizen complaint tracking
+- Administrative dashboard
+- Complaint analytics
+- Recurring issue identification
+- Resolution verification
+
+---
+
+## 🖥️ Application Screens
+
+The application includes the following major screens:
+
+| Screen | Purpose |
+|---|---|
+| Landing Page | Introduces the platform and its capabilities |
+| Complaint Reporting | Allows citizens to speak, type, or provide evidence |
+| AI Preview | Displays extracted complaint information |
+| Complaint Tracking | Shows grievance ID and progress |
+| My Complaints | Lists citizen complaints and statuses |
+| Complaint Details | Displays complaint information and timeline |
+| Admin Dashboard | Provides administrative monitoring |
+| Complaint Management | Filters and manages grievances |
+| Recurring Issues | Highlights repeated local problems |
+| Resolution Verification | Collects citizen feedback |
+| Login and Registration | Supports user access and verification |
+
+---
+
+## 🛠️ Technology Stack
+
+### Frontend
+
+- React
+- Vite
+- JavaScript
+- CSS
+- Responsive UI design
+
+### Backend
+
+- Python
+- FastAPI
+- REST APIs
+
+### AI and Language Technologies
+
+- Bhashini API integration reference
+- Speech-to-text processing
+- Natural language processing
+- Indic script classification
+- AI-assisted complaint understanding
+
+### Database and Deployment
+
+- SQLite
+- Render deployment configuration
+- Vercel deployment configuration
+
+> Technology availability, API access, and deployment configuration should be verified before production integration.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+Install the following:
+
+- Node.js
+- npm
+- Python
+- Git
+
+### Clone the Repository
+
+```bash
+git clone https://github.com/divya5623/SIH.git
+cd SIH
+```
+
+### Frontend Setup
+
+```bash
+npm install
+```
+
+### Start the Frontend
+
+```bash
+npm run dev
+```
+
+Open the local development URL shown in your terminal.
+
+### Backend Setup
+
+The repository contains a backend directory and Python dependency configuration.
+
+```bash
+cd backend
+```
+
+Install the backend dependencies using the repository's requirements file:
+
+```bash
+pip install -r ../requirements.txt
+```
+
+> Configure the required environment variables and external API credentials before starting backend services.
+
+---
+
+## 🌐 Project Links
+
+- **GitHub Repository:**  
+  https://github.com/divya5623/SIH
+
+- **Live Application:**  
+  https://sih-lake-sigma.vercel.app/
+
+- **Project Category:** Smart Automation
+
+- **Problem Statement ID:** SIH26202
+
+---
+
+## 🔐 Responsible AI and Privacy
+
+The platform is designed with the following considerations:
+
+- Human review for uncertain AI classifications
+- Controlled access to administrative information
+- Protection of sensitive grievance data
+- Avoidance of unsupported government integrations
+- Clear distinction between prototype functionality and future deployment
+- Verification of external API permissions before production use
+
+---
+
+## 🔮 Future Enhancements
+
+- Support for additional Indian languages
+- Improved regional speech recognition
+- Government department integrations through authorised APIs
+- SMS and messaging notifications
+- Advanced grievance analytics
+- Offline and store-and-forward support
+- Improved security and access control
+- Scalable production database infrastructure
+
+---
+
+## 👥 Team Code Nexa
+
+We are building Awaaz Sarpanch to improve communication between citizens and local governance systems through accessible technology, AI-assisted understanding, and transparent grievance tracking.
+
+---
+
+## 📄 Project Status
+
+**Current focus:** AI-assisted civic grievance reporting, tracking, and administrative monitoring.
+
+This repository contains the application implementation, backend configuration, interface screens, and supporting project resources.
+
+---
+
+## ⭐ Support the Project
+
+If you find this project useful, consider starring the repository and sharing your feedback.
+
+**Awaaz Sarpanch — Empowering Citizens. Strengthening Local Governance.**
