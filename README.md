@@ -129,3 +129,17 @@ A production-ready, fully responsive React + Vite civic grievance reporting and 
    ```
    http://localhost:5173
    ```
+## 📌 Project Status
+
+Awaaz Sarpanch is an AI-powered, voice-first civic grievance platform designed to help citizens report local issues and help authorities organize, route, and track complaints.
+
+### Current Development
+
+- Citizen complaint submission
+- Voice, camera, and text input
+- AI-based complaint categorization
+- Department/authority routing
+- Complaint tracking
+- Recurring issue detection
+- Citizen resolution verification
+- Admin analytics
