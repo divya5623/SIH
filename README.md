@@ -127,3 +127,23 @@ On the Panchayat side, the system supports:
 │ Fixed → Close            │
 │ Not Fixed → Reopen       │
 └──────────────────────────┘
+# ⭐ Core Innovation
+
+Awaaz Sarpanch is designed around five connected ideas:
+
+### 🎙️ Voice-First Reporting
+Citizens can describe local problems using voice instead of depending only on typing.
+
+### 📸 Evidence-Based Complaints
+Complaints can include photo and location context to help the Panchayat understand the issue.
+
+### 📊 Recurring Issue Intelligence
+Similar complaints can be grouped using location, service, and time context to identify larger recurring problems.
+
+### 🔧 Resolution Tracking
+The Panchayat can update the complaint as action is taken and provide resolution evidence.
+
+### ✅ Citizen-Verified Resolution
+Citizens can verify whether the reported problem has actually been fixed. If it is not fixed, the complaint can be reopened.
+
+> **The key idea: move from complaint collection to verified resolution.**
