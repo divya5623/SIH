@@ -30,8 +30,8 @@ Common barriers include:
 
 - Language and literacy limitations
 - Difficulty typing long complaints
-- Lack of photo or location evidence
-- Complaints being treated individually even when many citizens face the same problem
+- Complaints may not always include sufficient photo or location context
+- Similar complaints may be treated individually even when they represent the same underlying problem
 - Difficulty tracking whether a complaint was actually resolved
 - Lack of citizen verification after a reported repair
 
@@ -54,20 +54,20 @@ A citizen can:
 1. Select their language
 2. Describe the problem using voice or text
 3. Attach a photo as evidence
-4. Provide location context
+4. Attach location context
 5. Submit the complaint
 6. Track its progress
 7. Verify the resolution
 8. Reopen the complaint if the problem is not actually fixed
 
-At the Panchayat side, complaints can be:
+On the Panchayat side, the system supports:
 
-- Understood and classified
-- Routed to the relevant service/department
-- Prioritized
-- Grouped with similar complaints
-- Tracked through resolution
-- Verified using completion evidence
+- Complaint review and classification
+- Service/department identification
+- Priority information
+- Similar complaint grouping
+- Resolution tracking
+- Resolution verification
 
 ---
 
@@ -75,19 +75,20 @@ At the Panchayat side, complaints can be:
 
 ```text
 ┌──────────────────────┐
-│      CITIZEN         │
-│ Voice / Text Report  │
+│       CITIZEN        │
+│  Voice / Text Report │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
-│ Evidence Collection  │
-│ Photo + GPS + Time   │
+│  EVIDENCE COLLECTION │
+│ Photo + Location     │
+│ + Timestamp          │
 └──────────┬───────────┘
            │
            ▼
 ┌──────────────────────┐
-│   AI PROCESSING      │
+│    AI PROCESSING     │
 │ Speech → Text        │
 │ Complaint Analysis   │
 │ Classification       │
