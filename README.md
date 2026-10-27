@@ -2,7 +2,7 @@
 
 ### Voice-First AI for Accessible & Accountable Local Governance
 
-**Smart India Hackathon 2026 — Software**
+**Smart India Hackathon 2026 — Software***
 **Problem Statement ID:** SIH26202
 **Team ID:** 138406
 **Team:** Code Nexa
